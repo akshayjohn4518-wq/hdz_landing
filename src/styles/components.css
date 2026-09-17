@@ -1,0 +1,609 @@
+/* Day Zero Reusable UI Component Styles */
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.dz-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dz-space-2);
+  font-family: var(--dz-font-mono);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: var(--dz-radius-xs);
+  cursor: pointer;
+  transition: background-color var(--dz-transition-fast), border-color var(--dz-transition-fast), color var(--dz-transition-fast), opacity var(--dz-transition-fast);
+  white-space: nowrap;
+  user-select: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.dz-btn:focus-visible {
+  outline: 2px solid var(--dz-accent);
+  outline-offset: 2px;
+}
+
+.dz-btn:disabled,
+.dz-btn.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Button Sizes */
+.dz-btn--sm {
+  height: 32px;
+  padding: 0 var(--dz-space-3);
+  font-size: 0.6875rem;
+}
+
+.dz-btn--md {
+  height: 40px;
+  padding: 0 var(--dz-space-5);
+  font-size: 0.75rem;
+}
+
+.dz-btn--lg {
+  height: 48px;
+  padding: 0 var(--dz-space-6);
+  font-size: 0.8125rem;
+}
+
+.dz-btn--full {
+  width: 100%;
+}
+
+/* Button Variants */
+.dz-btn--primary {
+  background-color: var(--dz-accent);
+  color: var(--dz-text-on-accent);
+  border-color: var(--dz-accent);
+}
+
+.dz-btn--primary:hover:not(:disabled) {
+  background-color: var(--dz-accent-subtle);
+  border-color: var(--dz-accent-subtle);
+}
+
+.dz-btn--secondary {
+  background-color: var(--dz-bg-surface-elevated);
+  color: var(--dz-text-primary);
+  border-color: var(--dz-border-default);
+}
+
+.dz-btn--secondary:hover:not(:disabled) {
+  background-color: var(--dz-bg-surface-hover);
+  border-color: var(--dz-border-emphasis);
+}
+
+.dz-btn--ghost {
+  background-color: transparent;
+  color: var(--dz-text-secondary);
+  border-color: transparent;
+}
+
+.dz-btn--ghost:hover:not(:disabled) {
+  background-color: var(--dz-bg-surface-hover);
+  color: var(--dz-text-primary);
+}
+
+.dz-btn--danger {
+  background-color: var(--dz-status-error-bg);
+  color: var(--dz-status-error);
+  border-color: var(--dz-status-error-border);
+}
+
+.dz-btn--danger:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.16);
+  border-color: var(--dz-status-error);
+}
+
+/* ==========================================================================
+   FORM CONTROLS (Input, Textarea, Select)
+   ========================================================================== */
+.dz-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dz-space-1);
+  width: 100%;
+}
+
+.dz-label {
+  font-family: var(--dz-font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dz-text-muted);
+}
+
+.dz-label-required {
+  color: var(--dz-status-error);
+  margin-left: 2px;
+}
+
+.dz-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: var(--dz-bg-surface);
+  border: 1px solid var(--dz-border-default);
+  border-radius: var(--dz-radius-xs);
+  transition: border-color var(--dz-transition-fast), background-color var(--dz-transition-fast);
+}
+
+.dz-input-wrapper:focus-within {
+  border-color: var(--dz-border-focus);
+  background-color: var(--dz-bg-surface-elevated);
+}
+
+.dz-input-wrapper.has-error {
+  border-color: var(--dz-status-error);
+}
+
+.dz-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 var(--dz-space-3);
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--dz-font-sans);
+  font-size: 0.875rem;
+  color: var(--dz-text-primary);
+}
+
+.dz-input::placeholder {
+  color: var(--dz-text-dim);
+}
+
+.dz-input--mono {
+  font-family: var(--dz-font-mono);
+  font-size: 0.8125rem;
+}
+
+.dz-input-icon-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: var(--dz-space-3);
+  color: var(--dz-text-dim);
+}
+
+.dz-input-icon-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: var(--dz-space-3);
+  color: var(--dz-text-dim);
+  cursor: pointer;
+}
+
+.dz-textarea {
+  width: 100%;
+  padding: var(--dz-space-3);
+  background-color: var(--dz-bg-surface);
+  border: 1px solid var(--dz-border-default);
+  border-radius: var(--dz-radius-xs);
+  font-family: var(--dz-font-sans);
+  font-size: 0.875rem;
+  color: var(--dz-text-primary);
+  outline: none;
+  resize: vertical;
+  transition: border-color var(--dz-transition-fast), background-color var(--dz-transition-fast);
+}
+
+.dz-textarea:focus {
+  border-color: var(--dz-border-focus);
+  background-color: var(--dz-bg-surface-elevated);
+}
+
+.dz-select {
+  width: 100%;
+  height: 40px;
+  padding: 0 var(--dz-space-3);
+  background-color: var(--dz-bg-surface);
+  border: 1px solid var(--dz-border-default);
+  border-radius: var(--dz-radius-xs);
+  font-family: var(--dz-font-sans);
+  font-size: 0.875rem;
+  color: var(--dz-text-primary);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.dz-select:focus {
+  border-color: var(--dz-border-focus);
+}
+
+.dz-field-hint {
+  font-family: var(--dz-font-mono);
+  font-size: 0.6875rem;
+  color: var(--dz-text-dim);
+  margin-top: 2px;
+}
+
+.dz-field-error {
+  font-family: var(--dz-font-mono);
+  font-size: 0.6875rem;
+  color: var(--dz-status-error);
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   BADGES & STATUS PILLS
+   ========================================================================== */
+.dz-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: var(--dz-radius-xs);
+  font-family: var(--dz-font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  user-select: none;
+  border: 1px solid transparent;
+}
+
+.dz-badge--operational {
+  background-color: var(--dz-status-operational-bg);
+  color: var(--dz-status-operational);
+  border-color: var(--dz-status-operational-border);
+}
+
+.dz-badge--warning {
+  background-color: var(--dz-status-warning-bg);
+  color: var(--dz-status-warning);
+  border-color: var(--dz-status-warning-border);
+}
+
+.dz-badge--error {
+  background-color: var(--dz-status-error-bg);
+  color: var(--dz-status-error);
+  border-color: var(--dz-status-error-border);
+}
+
+.dz-badge--neutral {
+  background-color: var(--dz-status-neutral-bg);
+  color: var(--dz-text-secondary);
+  border-color: var(--dz-status-neutral-border);
+}
+
+.dz-badge--outline {
+  background-color: transparent;
+  color: var(--dz-text-muted);
+  border-color: var(--dz-border-default);
+}
+
+.dz-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+  display: inline-block;
+}
+
+.dz-status-dot.is-pulsing {
+  opacity: 0.8;
+}
+
+/* ==========================================================================
+   CARDS
+   ========================================================================== */
+.dz-card {
+  background-color: var(--dz-bg-surface);
+  border: 1px solid var(--dz-border-subtle);
+  border-radius: var(--dz-radius-none);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.dz-card--interactive {
+  transition: border-color var(--dz-transition-fast), background-color var(--dz-transition-fast);
+}
+
+.dz-card--interactive:hover {
+  border-color: var(--dz-border-emphasis);
+  background-color: var(--dz-bg-surface-elevated);
+}
+
+.dz-card-header {
+  padding: var(--dz-space-4) var(--dz-space-5);
+  border-bottom: 1px solid var(--dz-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dz-space-3);
+}
+
+.dz-card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dz-card-title {
+  font-family: var(--dz-font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dz-text-primary);
+}
+
+.dz-card-subtitle {
+  font-size: 0.75rem;
+  color: var(--dz-text-muted);
+}
+
+.dz-card-body {
+  padding: var(--dz-space-5);
+  flex: 1;
+}
+
+.dz-card-footer {
+  padding: var(--dz-space-3) var(--dz-space-5);
+  border-top: 1px solid var(--dz-border-subtle);
+  background-color: rgba(255, 255, 255, 0.01);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ==========================================================================
+   TABLES
+   ========================================================================== */
+.dz-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--dz-border-subtle);
+}
+
+.dz-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  text-align: left;
+}
+
+.dz-table th {
+  background-color: var(--dz-bg-surface-elevated);
+  padding: var(--dz-space-3) var(--dz-space-4);
+  font-family: var(--dz-font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dz-text-muted);
+  border-bottom: 1px solid var(--dz-border-default);
+  white-space: nowrap;
+}
+
+.dz-table td {
+  padding: var(--dz-space-4);
+  border-bottom: 1px solid var(--dz-border-subtle);
+  color: var(--dz-text-primary);
+  vertical-align: middle;
+}
+
+.dz-table tr:hover td {
+  background-color: var(--dz-bg-surface-hover);
+}
+
+/* ==========================================================================
+   TABS
+   ========================================================================== */
+.dz-tabs {
+  display: flex;
+  gap: var(--dz-space-2);
+  border-bottom: 1px solid var(--dz-border-subtle);
+}
+
+.dz-tab {
+  padding: var(--dz-space-2) var(--dz-space-4);
+  font-family: var(--dz-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dz-text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color var(--dz-transition-fast), border-color var(--dz-transition-fast);
+}
+
+.dz-tab:hover {
+  color: var(--dz-text-primary);
+}
+
+.dz-tab.is-active {
+  color: var(--dz-accent);
+  border-bottom-color: var(--dz-accent);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   MODAL & CONFIRM DIALOG
+   ========================================================================== */
+.dz-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(5, 5, 5, 0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--dz-space-4);
+  z-index: 1000;
+  animation: dzFadeIn 150ms ease;
+}
+
+.dz-modal-content {
+  background-color: var(--dz-bg-surface);
+  border: 1px solid var(--dz-border-emphasis);
+  width: 100%;
+  max-width: 480px;
+  box-shadow: var(--dz-shadow-overlay);
+  display: flex;
+  flex-direction: column;
+}
+
+.dz-modal-header {
+  padding: var(--dz-space-4) var(--dz-space-5);
+  border-bottom: 1px solid var(--dz-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dz-modal-body {
+  padding: var(--dz-space-6) var(--dz-space-5);
+  color: var(--dz-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.dz-modal-footer {
+  padding: var(--dz-space-4) var(--dz-space-5);
+  border-top: 1px solid var(--dz-border-subtle);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--dz-space-3);
+  background-color: var(--dz-bg-surface-elevated);
+}
+
+/* ==========================================================================
+   DRAWER
+   ========================================================================== */
+.dz-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 900;
+  display: flex;
+}
+
+.dz-drawer {
+  background-color: var(--dz-bg-surface);
+  border-right: 1px solid var(--dz-border-default);
+  width: 280px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: dzSlideIn 200ms ease;
+}
+
+@keyframes dzSlideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes dzFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ==========================================================================
+   TOAST
+   ========================================================================== */
+.dz-toast-container {
+  position: fixed;
+  bottom: var(--dz-space-6);
+  right: var(--dz-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dz-space-2);
+  z-index: 1100;
+  pointer-events: none;
+}
+
+.dz-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--dz-space-3);
+  padding: var(--dz-space-3) var(--dz-space-4);
+  background-color: var(--dz-bg-surface-elevated);
+  border: 1px solid var(--dz-border-emphasis);
+  box-shadow: var(--dz-shadow-card);
+  font-family: var(--dz-font-mono);
+  font-size: 0.75rem;
+  color: var(--dz-text-primary);
+  min-width: 280px;
+  animation: dzToastEnter 180ms ease;
+}
+
+.dz-toast--success {
+  border-left: 3px solid var(--dz-status-operational);
+}
+
+.dz-toast--error {
+  border-left: 3px solid var(--dz-status-error);
+}
+
+.dz-toast--info {
+  border-left: 3px solid var(--dz-text-muted);
+}
+
+@keyframes dzToastEnter {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ==========================================================================
+   EMPTY & LOADING STATES
+   ========================================================================== */
+.dz-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--dz-space-12) var(--dz-space-6);
+  text-align: center;
+  border: 1px dashed var(--dz-border-default);
+}
+
+.dz-empty-icon {
+  color: var(--dz-text-dim);
+  margin-bottom: var(--dz-space-4);
+}
+
+.dz-empty-title {
+  font-family: var(--dz-font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dz-text-primary);
+  margin-bottom: var(--dz-space-2);
+}
+
+.dz-empty-desc {
+  font-size: 0.8125rem;
+  color: var(--dz-text-muted);
+  max-width: 320px;
+  margin-bottom: var(--dz-space-5);
+}
+
+.dz-loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--dz-accent);
+  border-radius: 50%;
+  animation: dzSpin 0.7s linear infinite;
+}
+
+@keyframes dzSpin {
+  to { transform: rotate(360deg); }
+}

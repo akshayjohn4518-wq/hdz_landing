@@ -1,0 +1,75 @@
+/* Day Zero Admin Panel Design Tokens */
+:root {
+  /* Color Palette - Core */
+  --dz-bg-canvas: #050505;
+  --dz-bg-surface: #0B0B0B;
+  --dz-bg-surface-elevated: #111111;
+  --dz-bg-surface-subtle: #141414;
+  --dz-bg-surface-hover: #181818;
+  --dz-bg-surface-active: #1F1F1F;
+
+  /* Text & Content */
+  --dz-text-primary: #F3F4F6;
+  --dz-text-secondary: #C5C7CC;
+  --dz-text-muted: #8E8E93;
+  --dz-text-dim: #545458;
+  --dz-text-on-accent: #050505;
+
+  /* Accent & Technical Indicators */
+  --dz-accent: #FFFFFF;
+  --dz-accent-subtle: #E5E7EB;
+
+  /* Status Tokens */
+  --dz-status-operational: #22C55E;
+  --dz-status-operational-bg: rgba(34, 197, 94, 0.08);
+  --dz-status-operational-border: rgba(34, 197, 94, 0.25);
+
+  --dz-status-warning: #F59E0B;
+  --dz-status-warning-bg: rgba(245, 158, 11, 0.08);
+  --dz-status-warning-border: rgba(245, 158, 11, 0.25);
+
+  --dz-status-error: #EF4444;
+  --dz-status-error-bg: rgba(239, 68, 68, 0.08);
+  --dz-status-error-border: rgba(239, 68, 68, 0.25);
+
+  --dz-status-neutral: #8E8E93;
+  --dz-status-neutral-bg: rgba(142, 142, 147, 0.08);
+  --dz-status-neutral-border: rgba(142, 142, 147, 0.2);
+
+  /* Borders & Dividers */
+  --dz-border-subtle: #181818;
+  --dz-border-default: #222222;
+  --dz-border-emphasis: #333333;
+  --dz-border-focus: #555555;
+
+  /* Typography */
+  --dz-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --dz-font-mono: 'JetBrains Mono', 'SF Mono', Consolas, 'Courier New', monospace;
+
+  /* Spacing */
+  --dz-space-1: 4px;
+  --dz-space-2: 8px;
+  --dz-space-3: 12px;
+  --dz-space-4: 16px;
+  --dz-space-5: 20px;
+  --dz-space-6: 24px;
+  --dz-space-8: 32px;
+  --dz-space-10: 40px;
+  --dz-space-12: 48px;
+  --dz-space-16: 64px;
+
+  /* Radii - Restrained & precise (not oversized rounded cards) */
+  --dz-radius-none: 0px;
+  --dz-radius-xs: 2px;
+  --dz-radius-sm: 4px;
+  --dz-radius-md: 6px;
+
+  /* Shadows - Minimalist technical elevation, no heavy blur glow */
+  --dz-shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --dz-shadow-card: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --dz-shadow-overlay: 0 12px 32px rgba(0, 0, 0, 0.8);
+
+  /* Transitions - Restrained */
+  --dz-transition-fast: 120ms ease;
+  --dz-transition-default: 180ms ease;
+}

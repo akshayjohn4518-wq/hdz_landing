@@ -1,0 +1,392 @@
+/* Day Zero Layout Styles */
+
+/* ==========================================================================
+   LOGIN PAGE (70:30 Split on desktop, natural stack on mobile)
+   ========================================================================== */
+.login-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: var(--dz-bg-canvas);
+  overflow-x: hidden;
+}
+
+/* 70% Branding Area */
+.login-hero-area {
+  flex: 7;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--dz-space-10) var(--dz-space-12);
+  background-color: var(--dz-bg-canvas);
+  border-right: 1px solid var(--dz-border-subtle);
+  overflow: hidden;
+}
+
+/* Technical Blueprint Grid Pattern */
+.blueprint-grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: center center;
+}
+
+.blueprint-grid-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 40% 40%, transparent 0%, rgba(5, 5, 5, 0.8) 100%);
+}
+
+.login-hero-top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-hero-center {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+  padding: var(--dz-space-8) 0;
+}
+
+.login-hero-headline {
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: var(--dz-text-primary);
+  margin-top: var(--dz-space-4);
+  text-transform: uppercase;
+}
+
+.login-hero-subtext {
+  margin-top: var(--dz-space-6);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--dz-text-muted);
+  max-width: 480px;
+}
+
+.login-hero-bottom {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--dz-border-subtle);
+  padding-top: var(--dz-space-4);
+}
+
+/* 30% Form Panel */
+.login-form-area {
+  flex: 3;
+  min-width: 380px;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--dz-space-8) var(--dz-space-8);
+  background-color: var(--dz-bg-surface);
+  position: relative;
+  z-index: 3;
+}
+
+.login-form-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dz-space-6);
+}
+
+.login-form-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dz-space-2);
+}
+
+.login-form-title {
+  font-family: var(--dz-font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dz-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--dz-space-2);
+}
+
+.login-credentials-hint {
+  padding: var(--dz-space-3);
+  background-color: var(--dz-bg-surface-elevated);
+  border: 1px solid var(--dz-border-subtle);
+  font-family: var(--dz-font-mono);
+  font-size: 0.6875rem;
+  color: var(--dz-text-dim);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.login-credentials-hint span {
+  color: var(--dz-text-muted);
+}
+
+.login-error-banner {
+  padding: var(--dz-space-3);
+  background-color: var(--dz-status-error-bg);
+  border: 1px solid var(--dz-status-error-border);
+  color: var(--dz-status-error);
+  font-family: var(--dz-font-mono);
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: var(--dz-space-2);
+}
+
+/* ==========================================================================
+   ADMIN APPLICATION SHELL (Sidebar | Main Content)
+   ========================================================================== */
+.admin-shell {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--dz-bg-canvas);
+  color: var(--dz-text-primary);
+  overflow: hidden;
+}
+
+/* Sidebar - Fixed on left */
+.admin-sidebar {
+  width: 260px;
+  background-color: var(--dz-bg-surface);
+  border-right: 1px solid var(--dz-border-subtle);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 50;
+  user-select: none;
+}
+
+.sidebar-header {
+  padding: var(--dz-space-5) var(--dz-space-5);
+  border-bottom: 1px solid var(--dz-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--dz-space-3);
+}
+
+.sidebar-brand-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-brand-main {
+  font-family: var(--dz-font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--dz-text-primary);
+  text-transform: uppercase;
+}
+
+.sidebar-brand-badge {
+  font-family: var(--dz-font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  color: var(--dz-text-dim);
+  text-transform: uppercase;
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--dz-space-4) var(--dz-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dz-space-5);
+}
+
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-section-title {
+  padding: 0 var(--dz-space-2) var(--dz-space-2);
+  font-family: var(--dz-font-mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dz-text-dim);
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px var(--dz-space-2);
+  font-family: var(--dz-font-sans);
+  font-size: 0.8125rem;
+  color: var(--dz-text-muted);
+  text-decoration: none;
+  border-radius: var(--dz-radius-xs);
+  transition: color var(--dz-transition-fast), background-color var(--dz-transition-fast);
+  cursor: pointer;
+}
+
+.sidebar-nav-item:hover {
+  color: var(--dz-text-primary);
+  background-color: var(--dz-bg-surface-hover);
+}
+
+.sidebar-nav-item.is-active {
+  color: var(--dz-accent);
+  background-color: var(--dz-bg-surface-active);
+  font-weight: 500;
+}
+
+.sidebar-nav-item-left {
+  display: flex;
+  align-items: center;
+  gap: var(--dz-space-3);
+}
+
+.sidebar-bottom {
+  border-top: 1px solid var(--dz-border-subtle);
+  padding: var(--dz-space-4) var(--dz-space-4);
+  background-color: var(--dz-bg-surface-elevated);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dz-space-3);
+}
+
+.sidebar-user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-user-name {
+  font-family: var(--dz-font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dz-text-primary);
+}
+
+.sidebar-user-role {
+  font-family: var(--dz-font-mono);
+  font-size: 0.625rem;
+  color: var(--dz-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Main Content Area - Scrollable Right Side */
+.admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh;
+  margin-left: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--dz-bg-canvas);
+}
+
+/* Sidebar inside mobile drawer reset */
+.dz-drawer .admin-sidebar {
+  position: static;
+  height: 100%;
+  width: 100%;
+}
+
+/* Mobile menu trigger - hidden on desktop */
+.mobile-menu-trigger {
+  display: none;
+  background: var(--dz-bg-surface-elevated);
+  border: 1px solid var(--dz-border-default);
+  color: var(--dz-text-primary);
+  padding: 8px;
+  margin: var(--dz-space-4) var(--dz-space-4) 0;
+  border-radius: var(--dz-radius-xs);
+  cursor: pointer;
+  align-self: flex-start;
+  z-index: 30;
+}
+
+.admin-page-content {
+  flex: 1;
+  padding: var(--dz-space-8) var(--dz-space-8);
+  max-width: 1400px;
+  width: 100%;
+}
+
+/* ==========================================================================
+   RESPONSIVE QUERIES
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .login-hero-area {
+    padding: var(--dz-space-6) var(--dz-space-6);
+  }
+  .login-form-area {
+    min-width: 320px;
+    padding: var(--dz-space-6);
+  }
+}
+
+@media (max-width: 860px) {
+  /* Stack Login naturally on tablet and mobile */
+  .login-container {
+    flex-direction: column;
+  }
+  .login-hero-area {
+    flex: none;
+    border-right: none;
+    border-bottom: 1px solid var(--dz-border-subtle);
+    padding: var(--dz-space-8) var(--dz-space-5);
+  }
+  .login-form-area {
+    flex: none;
+    min-width: 100%;
+    max-width: 100%;
+    padding: var(--dz-space-8) var(--dz-space-5);
+  }
+
+  /* Admin sidebar collapses on tablet/mobile */
+  .admin-sidebar {
+    display: none;
+  }
+  .admin-main {
+    margin-left: 0;
+  }
+  .mobile-menu-trigger {
+    display: flex;
+  }
+  .admin-page-content {
+    padding: var(--dz-space-5);
+  }
+}

@@ -1,0 +1,78 @@
+/* Day Zero Typography */
+
+body {
+  font-family: var(--dz-font-sans);
+  color: var(--dz-text-primary);
+  background-color: var(--dz-bg-canvas);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Monospace text */
+.font-mono {
+  font-family: var(--dz-font-mono);
+}
+
+/* Editorial Headings */
+.editorial-title {
+  font-family: var(--dz-font-sans);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.editorial-h1 {
+  font-size: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--dz-text-primary);
+}
+
+.editorial-h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--dz-text-primary);
+}
+
+.editorial-h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  color: var(--dz-text-primary);
+}
+
+/* Technical Labels & Monospace Metadata */
+.tech-label {
+  font-family: var(--dz-font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dz-text-muted);
+}
+
+.tech-coord {
+  font-family: var(--dz-font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  color: var(--dz-text-dim);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.tech-value {
+  font-family: var(--dz-font-mono);
+  font-feature-settings: "tnum" 1;
+  letter-spacing: -0.01em;
+}
+
+.subhead {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--dz-text-muted);
+}
