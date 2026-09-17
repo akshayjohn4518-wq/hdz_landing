@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AuthContext, type User } from './AuthContextDefinition';
+import { AuthContext, type User, type SignupData } from './AuthContextDefinition';
 
 const STORAGE_KEY = 'dayzero_admin_session';
 
@@ -25,26 +25,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user]);
 
   const login = async (username: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    await new Promise((resolve) => setTimeout(resolve, 600));
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
 
-    const cleanUser = username.trim().toLowerCase();
-    const cleanPass = password.trim();
+      const data = await response.json();
 
-    if (cleanUser === 'admin' && cleanPass === 'dayzero') {
-      const activeUser: User = {
-        username: 'admin',
-        name: 'Alex Vance',
-        role: 'SUPER ADMIN',
-        email: 'alex@dayzero.internal',
+      if (response.ok && data.success && data.user) {
+        setUser(data.user);
+        return { success: true };
+      }
+
+      return {
+        success: false,
+        error: data.error || 'Invalid credentials. Access restricted to authorized operators.',
       };
-      setUser(activeUser);
-      return { success: true };
+    } catch (err: unknown) {
+      console.error('Login network error:', err);
+      return {
+        success: false,
+        error: 'Communication error with authentication backend.',
+      };
     }
+  };
 
-    return {
-      success: false,
-      error: 'Invalid credentials. Access restricted to authorized operators.',
-    };
+  const signup = async (signupData: SignupData): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(signupData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success && data.user) {
+        setUser(data.user);
+        return { success: true };
+      }
+
+      return {
+        success: false,
+        error: data.error || 'Unable to register operator account.',
+      };
+    } catch (err: unknown) {
+      console.error('Signup network error:', err);
+      return {
+        success: false,
+        error: 'Communication error with registration service.',
+      };
+    }
   };
 
   const logout = () => {
@@ -57,6 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         isAuthenticated: !!user,
         login,
+        signup,
         logout,
       }}
     >

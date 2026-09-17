@@ -177,6 +177,24 @@ export const LoginPage: React.FC = () => {
             >
               Sign In
             </AdminButton>
+
+            <div style={{ textAlign: 'center', marginTop: '12px' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--dz-text-muted)' }}>
+                New operator?{' '}
+              </span>
+              <Link
+                to="/admin/signup"
+                style={{
+                  fontFamily: 'var(--dz-font-mono)',
+                  fontSize: '0.75rem',
+                  color: 'var(--dz-accent)',
+                  textDecoration: 'underline',
+                  textUnderlineOffset: '3px',
+                }}
+              >
+                Create Admin Account
+              </Link>
+            </div>
           </form>
         </div>
       </section>

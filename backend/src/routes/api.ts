@@ -31,7 +31,10 @@ apiRouter.get('/health', async (_req: Request, res: Response) => {
 });
 
 // Authentication
+apiRouter.post('/auth/signup', authCtrl.signup);
 apiRouter.post('/auth/login', authCtrl.login);
+apiRouter.get('/auth/users', authCtrl.getUsers);
+apiRouter.get('/auth/logins', authCtrl.getUserLogins);
 
 // Dashboard
 apiRouter.get('/dashboard/stats', dashboardCtrl.getDashboardStats);

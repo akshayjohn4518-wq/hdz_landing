@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context';
 import { LoginPage } from '../pages/auth/LoginPage';
+import { SignupPage } from '../pages/auth/SignupPage';
 import { ForgotPasswordPage } from '../pages/auth/ForgotPasswordPage';
 import { AdminShell } from '../components/layout/AdminShell';
 import { DashboardPage } from '../pages/dashboard/DashboardPage';
@@ -42,6 +43,14 @@ export const AppRoutes: React.FC = () => {
         element={
           <GuestGuard>
             <LoginPage />
+          </GuestGuard>
+        }
+      />
+      <Route
+        path="/admin/signup"
+        element={
+          <GuestGuard>
+            <SignupPage />
           </GuestGuard>
         }
       />
