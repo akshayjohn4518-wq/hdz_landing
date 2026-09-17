@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import { query } from '../db/connection.js';
+import { pool, query } from '../db/connection.js';
 import { hashPassword, verifyPassword } from '../utils/security.js';
 
 export const signup = async (req: Request, res: Response) => {
+  const client = await pool.connect();
   try {
     const { username, email, password, name, role } = req.body;
 
@@ -33,65 +34,181 @@ export const signup = async (req: Request, res: Response) => {
       });
     }
 
-    // Check if username or email is already taken
-    const existing = await query(
-      'SELECT id, username, email FROM users WHERE LOWER(username) = $1 OR LOWER(email) = $2',
-      [cleanUser, cleanEmail]
+    // 1. Check for existing username in public.users
+    const userCheck = await client.query(
+      'SELECT id FROM public.users WHERE LOWER(username) = $1',
+      [cleanUser]
     );
 
-    if (existing.rows.length > 0) {
-      const match = existing.rows[0];
-      if (match.username.toLowerCase() === cleanUser) {
-        return res.status(409).json({
-          success: false,
-          error: 'An operator with this username already exists in the system.',
-        });
-      }
+    if (userCheck.rows.length > 0) {
       return res.status(409).json({
         success: false,
-        error: 'An operator with this email address already exists.',
+        error: 'An operator with this username already exists.',
       });
     }
 
-    // Hash password
-    const passwordHash = hashPassword(cleanPass);
+    await client.query('BEGIN');
 
-    // Insert user into Supabase PostgreSQL
-    const insertRes = await query(
-      `INSERT INTO users (username, password_hash, name, role, email, last_login_at)
-       VALUES ($1, $2, $3, $4, $5, NOW())
-       RETURNING id, username, name, role, email, last_login_at, created_at`,
-      [cleanUser, passwordHash, cleanName, userRole, cleanEmail]
+    // 2. Check if user already exists in auth.users
+    let authUserId: string;
+    const existingAuth = await client.query(
+      'SELECT id FROM auth.users WHERE LOWER(email) = LOWER($1)',
+      [cleanEmail]
     );
 
-    const newUser = insertRes.rows[0];
+    const userMeta = {
+      name: cleanName,
+      username: cleanUser,
+      role: userRole,
+    };
+
+    if (existingAuth.rows.length > 0) {
+      // User exists in auth.users, update password & metadata
+      authUserId = existingAuth.rows[0].id;
+      await client.query(
+        `UPDATE auth.users
+         SET encrypted_password = extensions.crypt($1, extensions.gen_salt('bf')),
+             email_confirmed_at = COALESCE(email_confirmed_at, NOW()),
+             raw_user_meta_data = $2::jsonb,
+             updated_at = NOW()
+         WHERE id = $3`,
+        [cleanPass, JSON.stringify(userMeta), authUserId]
+      );
+    } else {
+      // Insert into auth.users (Visible in Supabase Dashboard -> Authentication -> Users!)
+      const authUserSql = `
+        INSERT INTO auth.users (
+          instance_id,
+          id,
+          aud,
+          role,
+          email,
+          encrypted_password,
+          email_confirmed_at,
+          raw_app_meta_data,
+          raw_user_meta_data,
+          created_at,
+          updated_at,
+          is_sso_user,
+          is_anonymous
+        ) VALUES (
+          '00000000-0000-0000-0000-000000000000',
+          gen_random_uuid(),
+          'authenticated',
+          'authenticated',
+          $1,
+          extensions.crypt($2, extensions.gen_salt('bf')),
+          NOW(),
+          '{"provider":"email","providers":["email"]}'::jsonb,
+          $3::jsonb,
+          NOW(),
+          NOW(),
+          false,
+          false
+        )
+        RETURNING id;
+      `;
+
+      const newAuthRes = await client.query(authUserSql, [
+        cleanEmail,
+        cleanPass,
+        JSON.stringify(userMeta),
+      ]);
+      authUserId = newAuthRes.rows[0].id;
+
+      // Insert identity into auth.identities
+      const identitySql = `
+        INSERT INTO auth.identities (
+          id,
+          user_id,
+          identity_data,
+          provider,
+          provider_id,
+          last_sign_in_at,
+          created_at,
+          updated_at
+        ) VALUES (
+          gen_random_uuid(),
+          $1,
+          $2::jsonb,
+          'email',
+          $1::text,
+          NOW(),
+          NOW(),
+          NOW()
+        );
+      `;
+      await client.query(identitySql, [
+        authUserId,
+        JSON.stringify({ sub: authUserId, email: cleanEmail }),
+      ]);
+    }
+
+    // 3. Hash password for public backup verification
+    const passwordHash = hashPassword(cleanPass);
+
+    // 4. Insert or update into public.users using the EXACT Supabase auth.users UUID
+    const publicUserSql = `
+      INSERT INTO public.users (
+        id,
+        username,
+        password_hash,
+        name,
+        role,
+        email,
+        last_login_at
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, NOW()
+      )
+      ON CONFLICT (id) DO UPDATE
+      SET username = EXCLUDED.username,
+          password_hash = EXCLUDED.password_hash,
+          name = EXCLUDED.name,
+          role = EXCLUDED.role,
+          email = EXCLUDED.email,
+          last_login_at = NOW()
+      RETURNING id, username, name, role, email, last_login_at, created_at;
+    `;
+
+    const publicRes = await client.query(publicUserSql, [
+      authUserId,
+      cleanUser,
+      passwordHash,
+      cleanName,
+      userRole,
+      cleanEmail,
+    ]);
+
+    const newUser = publicRes.rows[0];
     const ipAddress = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1') as string;
     const userAgent = (req.headers['user-agent'] || 'Direct Client') as string;
 
-    // Record initial login in user_logins table
-    await query(
+    // 5. Record initial login in user_logins
+    await client.query(
       `INSERT INTO user_logins (user_id, ip_address, user_agent)
        VALUES ($1, $2, $3)`,
       [newUser.id, ipAddress, userAgent]
     );
 
-    // Record system activity
-    await query(
+    // 6. Record in system_activities
+    await client.query(
       `INSERT INTO system_activities (type, title, meta, badge_label, badge_variant, user_id)
        VALUES ($1, $2, $3, $4, $5, $6)`,
       [
         'operator_registered',
         `New operator registered: ${cleanName}`,
-        `Assigned credentials for ${cleanUser} (${userRole})`,
+        `Registered in Supabase Auth (${userRole})`,
         'REGISTERED',
         'operational',
         newUser.id,
       ]
     );
 
+    await client.query('COMMIT');
+
     return res.status(201).json({
       success: true,
-      message: 'Operator account initialized successfully.',
+      message: 'Operator registered in Supabase Authentication successfully.',
       user: {
         id: newUser.id,
         username: newUser.username,
@@ -102,11 +219,14 @@ export const signup = async (req: Request, res: Response) => {
       },
     });
   } catch (err: unknown) {
+    await client.query('ROLLBACK');
     console.error('Signup error:', err);
     return res.status(500).json({
       success: false,
       error: 'Failed to complete operator registration in Supabase.',
     });
+  } finally {
+    client.release();
   }
 };
 
@@ -121,15 +241,15 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    const cleanUser = String(username).trim().toLowerCase();
+    const cleanIdentifier = String(username).trim().toLowerCase();
     const cleanPass = String(password).trim();
 
-    // Query user by username or email
+    // 1. Find user in public.users (by username or email)
     const userRes = await query(
       `SELECT id, username, password_hash, name, role, email, last_login_at 
-       FROM users 
+       FROM public.users 
        WHERE LOWER(username) = $1 OR LOWER(email) = $1`,
-      [cleanUser]
+      [cleanIdentifier]
     );
 
     if (userRes.rows.length === 0) {
@@ -141,8 +261,21 @@ export const login = async (req: Request, res: Response) => {
 
     const user = userRes.rows[0];
 
-    // Verify hashed password
-    const isMatch = verifyPassword(cleanPass, user.password_hash);
+    // 2. Verify password (check salted hash or auth.users crypt)
+    let isMatch = verifyPassword(cleanPass, user.password_hash);
+    if (!isMatch) {
+      // Check auth.users encrypted_password
+      const cryptCheck = await query(
+        `SELECT (encrypted_password = extensions.crypt($1, encrypted_password)) AS match 
+         FROM auth.users 
+         WHERE id = $2`,
+        [cleanPass, user.id]
+      );
+      if (cryptCheck.rows.length > 0 && cryptCheck.rows[0].match) {
+        isMatch = true;
+      }
+    }
+
     if (!isMatch) {
       return res.status(401).json({
         success: false,
@@ -153,32 +286,39 @@ export const login = async (req: Request, res: Response) => {
     const ipAddress = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1') as string;
     const userAgent = (req.headers['user-agent'] || 'Direct Client') as string;
 
-    // 1. Record login in user_logins table
+    // 3. Record login in user_logins
     await query(
       `INSERT INTO user_logins (user_id, ip_address, user_agent)
        VALUES ($1, $2, $3)`,
       [user.id, ipAddress, userAgent]
     );
 
-    // 2. Update last_login_at in users table
+    // 4. Update last_login_at in public.users and auth.users
     const updateRes = await query(
-      `UPDATE users 
+      `UPDATE public.users 
        SET last_login_at = NOW(), updated_at = NOW() 
        WHERE id = $1 
        RETURNING last_login_at`,
       [user.id]
     );
 
+    await query(
+      `UPDATE auth.users 
+       SET last_sign_in_at = NOW() 
+       WHERE id = $1`,
+      [user.id]
+    );
+
     const latestLoginAt = updateRes.rows[0]?.last_login_at || new Date().toISOString();
 
-    // 3. Record system activity
+    // 5. Record system activity
     await query(
       `INSERT INTO system_activities (type, title, meta, badge_label, badge_variant, user_id)
        VALUES ($1, $2, $3, $4, $5, $6)`,
       [
         'operator_login',
         `Operator session active: ${user.name}`,
-        `IP: ${ipAddress.split(',')[0]} • Role: ${user.role}`,
+        `IP: ${ipAddress.split(',')[0]} • Authenticated in Supabase Auth`,
         'SESSION',
         'operational',
         user.id,
@@ -217,7 +357,7 @@ export const getUsers = async (_req: Request, res: Response) => {
         u.last_login_at, 
         u.created_at,
         COUNT(ul.id) as login_count
-      FROM users u
+      FROM public.users u
       LEFT JOIN user_logins ul ON ul.user_id = u.id
       GROUP BY u.id
       ORDER BY u.created_at DESC
@@ -243,7 +383,7 @@ export const getUserLogins = async (req: Request, res: Response) => {
         ul.user_agent, 
         ul.created_at 
       FROM user_logins ul
-      JOIN users u ON u.id = ul.user_id
+      JOIN public.users u ON u.id = ul.user_id
     `;
     const params: unknown[] = [];
     if (userId) {
